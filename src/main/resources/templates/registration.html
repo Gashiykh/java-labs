@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .registration-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    .registration-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    .registration-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    .registration-form input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="registration-container">
+  <h1>Registration</h1>
+  <form th:action="@{/registration}" method="post" th:object="${user}" class="registration-form">
+    <div class="form-group">
+      <input th:field="*{name}" type="text" name="name" id="name" placeholder="Your name" required />
+    </div>
+    <div class="form-group">
+      <input th:field="*{login}" type="text" name="login" id="login" placeholder="Login" required />
+    </div>
+    <div class="form-group">
+      <input th:field="*{password}" type="password" name="password" id="password" placeholder="Password" required />
+    </div>
+    <div class="form-group">
+      <input th:field="*{email}" type="email" name="email" id="email" placeholder="Email" required />
+    </div>
+    <button type="submit" class="btn">Register</button>
+  </form>
+</div>
+</body>
+</html>

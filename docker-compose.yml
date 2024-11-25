@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_lab5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: taskuser
+      POSTGRES_PASSWORD: taskroot
+      POSTGRES_DB: taskdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:class="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Tasks</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="text"],
+        select,
+        input[type="number"] {
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .top-right-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: #e74c3c;
+        }
+
+        .top-right-button:hover {
+            background-color: #c0392b;
+        }
+
+        .links ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .links ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .links ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .links ul li form {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="'Welcome back, ' + ${#authentication.getPrincipal().getName()}+'!' "></h1>
+<h2>Your Tasks:</h2>
+<form th:action="@{/}" method="get">
+    <label for="status">Status:</label>
+    <select id="status" name="status">
+        <option value="">All</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+    <label for="categoryId">Category:</label>
+    <select id="categoryId" name="categoryId">
+        <option value="">All</option>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+
+    <label for="search">Search:</label>
+    <input type="text" id="search" name="search" placeholder="Search tasks" th:value="${searchQuery}"/>
+
+    <button type="submit">Filter</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.dueDate}"></td>
+        <td th:text="${task.status}"></td>
+        <td th:text="${task.priority}"></td>
+        <td th:text="${task.category != null ? task.category.name : 'No category'}"></td>
+        <td>
+            <a th:href="@{/edit/{id}(id=${task.id})}">Edit</a>
+            <a th:href="@{/delete/{id}(id=${task.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div class="links">
+    <ul>
+        <li th:if="${currentPage > 0}">
+            <a th:href="@{/}(page=${currentPage - 1}, status=${status}, categoryId=${category}, search=${searchQuery})">←
+                Previous</a>
+        </li>
+        <li>
+            <form th:action="@{/}" method="get">
+                <label for="pageInput">Page:</label>
+                <input type="number" id="pageInput" name="page" min="0" th:value="${currentPage + 1}"
+                       th:max="${totalPages - 1}">
+                <button type="submit">Go</button>
+            </form>
+        </li>
+        <li th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/}(page=${currentPage + 1}, status=${status}, categoryId=${category}, search=${searchQuery})">Next
+                →</a>
+        </li>
+    </ul>
+</div>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <button class="top-right-button" type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>
